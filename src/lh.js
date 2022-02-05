@@ -13,14 +13,6 @@ const getResult = async (url) => {
         headless: true,
     });
 
-    // Wait for Lighthouse to open url, then inject our stylesheet.
-    browser.on("targetchanged", async (target) => {
-        const page = await target.page();
-        if (page && page.url() === url) {
-            await page.addStyleTag({ content: "* {color: red}" });
-        }
-    });
-
     // Lighthouse will open the URL.
     // Puppeteer will observe `targetchanged` and inject our stylesheet.
     const { lhr } = await lighthouse(url, {
@@ -46,11 +38,17 @@ const server = http.createServer(async (req, res) => {
         res.write(JSON.stringify(result));
         res.end();
     } else {
-        res.setHeader("Content-Type", "application/json");
-        res.end("Server is running.");
+        res.setHeader("Content-Type", "text/html");
+        res.end("<!doctype html><html><head><title>Test server</title></head><body>Server is running</body></html>");
     }
 });
 
-server.listen(port, hostname, () => {
-    console.log(`Server running at http://${hostname}:${port}/`);
-});
+const runServer = () => {
+    server.listen(port, hostname, () => {
+        console.log(`Server running at http://${hostname}:${port}/`);
+    });
+};
+
+runServer();
+
+module.exports = server;

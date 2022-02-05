@@ -4,7 +4,7 @@
   "description": "",
   "main": "ls.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --detectOpenHandles",
     "start": "node src/lh"
   },
   "author": "",
